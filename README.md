@@ -1,4 +1,4 @@
-# Cloudflare Worker HTML to Image Renderer | my-cf-renderer
+# my-cf-renderer | Cloudflare Browser Rendering Example
 
 一个基于 [Cloudflare Workers](https://workers.cloudflare.com/) 的高性能动态图片生成服务，支持 HTML 模板 + JSON 数据渲染为 PNG/Base64 格式。
 
