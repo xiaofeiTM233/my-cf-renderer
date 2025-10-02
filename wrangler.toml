@@ -2,7 +2,5 @@ name = "my-cf-renderer"
 main = "src/index.ts"
 compatibility_date = "2023-11-21"
 
-# 关键配置：绑定 Cloudflare Browser Rendering 服务
-# "MYBROWSER" 是我们在代码中访问此服务的名称 (env.MYBROWSER)
-[[browser]]
+[browser]
 binding = "MYBROWSER"
