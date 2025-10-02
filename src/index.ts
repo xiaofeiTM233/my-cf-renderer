@@ -9,7 +9,7 @@ export interface Env {
 interface RenderRequestBody {
   template: string;
   data: Record<string, any>;
-  outputType?: 'base64' | 'buffer'; // 允许客户端指定输出类型
+  outputType?: 'base64' | 'buffer' | 'base64Array'; // 允许客户端指定输出类型
 }
 
 export default {
@@ -34,12 +34,22 @@ export default {
         // 将 base64 字符串包装在 JSON 对象中返回
         const payload = {
           code: '0',
-          data: result,
+          [outputType]: result,
         };
         return Response.json(payload);
       }
 
-      // 2. 处理 Buffer (默认情况)，直接返回图片
+      // 2. 处理 base64 字符串数组的返回
+
+      if (Array.isArray(result)) {
+        const payload = {
+          code: '0',
+          [outputType]: result,
+        };
+        return Response.json(payload);
+      }
+
+      // 3. 处理 Buffer (默认情况)，直接返回图片
       return new Response(result, {
         headers: {
           'Content-Type': 'image/png'

@@ -1,6 +1,6 @@
 # my-cf-renderer | Cloudflare Browser Rendering Example
 
-一个基于 [Cloudflare Workers](https://workers.cloudflare.com/) 的高性能动态图片生成服务，支持 HTML 模板 + JSON 数据渲染为 PNG/Base64 格式。
+一个基于 [Cloudflare Workers](https://workers.cloudflare.com/) 的高性能图片渲染服务，支持 HTML 模板 + JSON 数据渲染为 PNG/Base64 格式。
 
 该项目利用了 Cloudflare 的边缘网络，支持无服务器部署，具有高可用性和可扩展性，为不便自部署 [Browserless](https://github.com/browserless/browserless) 的 [Puppeteer](https://github.com/puppeteer/puppeteer) 用户提供了一个简单、高效的解决方案。
 

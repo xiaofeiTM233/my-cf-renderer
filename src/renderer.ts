@@ -1,7 +1,7 @@
 import { launch, Browser, ScreenshotOptions } from '@cloudflare/puppeteer';
 import mustache from 'mustache';
 
-type OutputType = 'base64' | 'buffer';
+type OutputType = 'base64' | 'buffer' | 'base64Array';
 
 /**
  * render | 使用 Cloudflare Browser Rendering 渲染 HTML 模板并截图。
@@ -17,7 +17,7 @@ export async function render(
   template: string,
   data: Record<string, any>,
   outputType: OutputType = 'buffer'
-): Promise<string | Buffer> {
+): Promise<string | Buffer | string[]> {
   if (!binding) {
     throw new Error('Cloudflare Browser Rendering binding is required.');
   }
@@ -46,6 +46,21 @@ export async function render(
     };
     if (outputType === 'base64') {
       options.encoding = 'base64';
+    }
+
+    // 分片截图
+    if (outputType === 'base64Array') {
+      options.encoding = 'base64';
+      // 可以通过 page.$$() 获取所有匹配选择器的元素，类似 document.querySelectorAll() 这会返回一个包含所有元素句柄的数组
+      const elements = await page.$$('.container');
+      let results = [] as string[];
+
+      // 遍历元素，分别截图
+      for (const element of elements) {
+        const result = await element.screenshot(options);
+        results.push(result as unknown as string);
+      }
+      return results;
     }
 
     const body = await page.$('#container');
