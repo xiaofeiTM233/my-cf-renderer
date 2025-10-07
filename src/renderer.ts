@@ -1,7 +1,7 @@
 import { launch, Browser, ScreenshotOptions } from '@cloudflare/puppeteer';
 import mustache from 'mustache';
 
-type OutputType = 'base64' | 'buffer' | 'base64Array';
+type OutputType = 'base64' | 'buffer' | 'base64Array' | `html`;
 
 /**
  * render | 使用 Cloudflare Browser Rendering 渲染 HTML 模板并截图。
@@ -9,8 +9,8 @@ type OutputType = 'base64' | 'buffer' | 'base64Array';
  * @param {any} binding - Cloudflare Worker 环境中绑定的 Browser Rendering 服务实例。
  * @param {string} template - 包含 Mustache 标签的 HTML 模板字符串。
  * @param {Record<string, any>} data - 用于填充模板的 content 对象。
- * @param {OutputType} [outputType='buffer'] - 'base64' 或 'buffer'。
- * @returns {Promise<string | Buffer>} 截图的 Base64 字符串、Buffer 或 Base64 字符串数组（分片截图时）。
+ * @param {OutputType} [outputType='buffer'] - 'base64' 或 'buffer' 或 'base64Array' 或 'html'。
+ * @returns {Promise<string | Buffer>} 截图的 Base64 字符串或 Buffer 对象 或 截图的 Base64 字符串数组 或 渲染后的 HTML 字符串。
  */
 export async function render(
   binding: any,
@@ -67,7 +67,12 @@ export async function render(
     if (!body) {
       throw new Error('未找到 #container 元素');
     }
-    const result = await body.screenshot(options);
+    let result;
+    if (outputType === 'html') {
+      result = await body.evaluate(el => (el as any).innerHTML);
+    } else {
+      result = await body.screenshot(options);
+    }
     
     await page.close().catch((err) => console.error('Error closing page:', err));
     
